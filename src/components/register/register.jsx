@@ -1,32 +1,32 @@
 // RegisterForm.js
-import { useForm , } from "react-hook-form";
+import { useForm  } from "react-hook-form";
 import { HiOutlineArrowCircleRight , HiOutlineArrowCircleLeft} from "react-icons/hi";
 import { FaArrowLeft, FaMapMarker } from 'react-icons/fa';
-import { Link } from "react-router-dom";
+import { Link ,useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useEffect ,React, useState } from "react";
 import {RegisterNewUser} from '../../services/userService'
-import axios from "axios";
+
 const fields = [
 
   {
     label: "Username",
     type: "text",
-    placeholder: "Doe",
+    placeholder: "Input your name",
     required: true,
     gridCols: 2,
   },
   {
     label: "Email",
     type: "email",
-    placeholder: "john.doe@example.com",
+    placeholder: "www@example.com",
     required: true,
     gridCols: 2,
   },
   {
     label: "Phone",
     type: "tel",
-    placeholder: "+1 123-456-7890",
+    placeholder: "+84 123-456-7890",
     required: true,
     gridCols: 2,
   },
@@ -63,8 +63,8 @@ const fields = [
   const password = watch("password");
 
 
- 
-  const onSubmit = async (Userdata) => {
+ const navigate = useNavigate();
+  const onSubmit = async (Userdata) => { // xử lí form submit 
     let userData = {
       email : Userdata.email,
       phone : Userdata.phone,
@@ -78,6 +78,8 @@ const fields = [
     const serverData =response.data// call Server để nhận respone code and validform register
     if (response.status >=200 && response.status <300){
       toast.success('Registration successfully!')
+      navigate("/login")
+      
     }
   
    }

@@ -1,32 +1,70 @@
 import { AiOutlineTwitter } from "react-icons/ai";
 import { BiLogoFacebook } from "react-icons/bi";
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from "react";
-import axios from "axios";
-import { data } from "autoprefixer";
-
+import { toast } from "react-toastify";
+import {LoginUser} from '../../services/userService'
 
 const Login = ()=>{
 let navigate = useNavigate();
+const [isLogin , setIsLogin ]= useState("")
+const [password , setPassword] = useState("")
 
-const submitForm = (e) =>{
-  e.preventDefault();
-  console.log(e)
+
+const submitForm = async(e) =>{
+  e.preventDefault()
+   if(!isLogin || !password){
+  toast.error('Please enter your email and password')
+ }
+ try {
+  const response = await LoginUser(isLogin,password)
+  console.log(response)
+  if(response.status >=200 && response.status <=300)
+  {
+    toast.success(response.data.EM)
+    const data = {
+      isAuthenticated : true,
+      token : 'fake token'
+    }
+    sessionStorage.setItem('account',JSON.stringify(data))
+    navigate("/users")
+  }
+  
+} catch (error) {
+  console.log(error)
+  if ( error.response){
+    console.error('error' , error.response.data)
+    switch (error.response.status) {
+      case 400:
+        toast.error(error.response.data.EM)
+        break;
+      case 500:
+        toast.error(error.response.data.EM)
+
+        break;
+    
+      default:
+        break;
+    }
+   }             
 }
+  }
+  const handleKeyPress = (event)=>{
+    if(event.code === 'Enter'){
+      submitForm(event);
+    }
+   
+  }
+
 const handleCreateNewAccount =()=>{
   navigate('/register')
 }
-useEffect(()=>{
-  axios.get("http://127.0.0.1:8080/api/test").then(data =>{
-    console.log(data)
-  })
-},[]);
 
 
     return(
             <>
-            <form action="" method="post" onSubmit={submitForm}>
+           <form method="POST" onSubmit={submitForm}>
          <section className="h-screen flex flex-col md:flex-row justify-center space-y-10 md:space-y-0 md:space-x-16 items-center my-2 mx-5 md:mx-0 md:my-0">
       <div className="md:w-1/3 max-w-sm">
         <img
@@ -65,11 +103,16 @@ useEffect(()=>{
           className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded"
           type="text"
           placeholder="Email Address"
+          value={isLogin}
+          onChange={(event) => {setIsLogin(event.target.value)}}
         />
         <input
           className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded mt-4"
           type="password"
           placeholder="Password"
+          value={password}
+          onChange={(event)=>{setPassword(event.target.value)}}
+          onKeyPress={(event)=>handleKeyPress(event)}
         />
         <div className="mt-4 flex justify-between font-semibold text-sm">
           <label className="flex text-slate-500 hover:text-slate-600 cursor-pointer">
@@ -103,7 +146,7 @@ useEffect(()=>{
       </div>
     </section>
     </form>
-        </> 
+  </>
     )
 }
 
