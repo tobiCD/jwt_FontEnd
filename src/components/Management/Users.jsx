@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { fetAllUser } from "../../services/userService";
+import { fetAllUser, deleteUser } from "../../services/userService";
 import ReactPaginate from "https://cdn.skypack.dev/react-paginate@7.1.3";
 // import React, { useEffect,useState} from "https://cdn.skypack.dev/react@17.0.1";
 import ReactDOM from "https://cdn.skypack.dev/react-dom@17.0.1";
+import { Link } from "react-router-dom";
 import './Users.scss'
+import { toast } from "react-toastify";
+import ModelDelete from '../Management/Popup'
+import { data } from "autoprefixer";
 const User = (props) => {
   const [listUsers, setListUsers] = useState([]);
   const [currentPage , setCurrentPage] = useState(1);
   const [currentLimit , setCurrentLimit ]= useState(2);
-  const [totalPage , setTotalPage ]= useState(0)
+  const [totalPage , setTotalPage ]= useState(0);
+  const [show, setShow] = useState(false);
+  const handleShow = () => setShow(true);
+  const [dataModel , setDataModel] = useState(null)
+
   useEffect(() => {
     fetchUser();
   }, [currentPage]);
 
   const fetchUser = async () => {
-
     try {
       const response = await fetAllUser( currentPage,currentLimit);
       console.log(response)
@@ -33,7 +40,28 @@ const User = (props) => {
     // console.log(+event.selected +1)
     await fetAllUser(+event.selected +1);
   };
-
+  const handleClose = () => {
+    setShow(false);
+    setDataModel(null) 
+  }
+  const handleDelete = async(user)=>{
+    handleShow();
+    console.log(user)
+    setDataModel(user)
+  }
+  const ConfirmDeleteUser = async ()=>{
+    if (dataModel) {
+      try {
+        await deleteUser(dataModel.id);
+        toast.success('User deleted successfully!');
+        await fetAllUser();
+      } catch (error) {
+        toast.error('Failed to delete user. Please try again.');
+      } finally {
+        handleClose();
+      }
+    }
+  };
   return (
     <>
       <div className="flex flex-col">
@@ -114,22 +142,17 @@ const User = (props) => {
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           
                           <div className="inline-flex space-x-3 ">
-                            <div className>
-                          <a
-                            href="#"
-                            className="text-indigo-600 hover:text-indigo-900"
-                          >
-                            Edit
-                          </a>
+                            <div>
+                              <Link  to={`users/edit/${user.id}`}
+                              className="text-indigo-600 hover:text-indigo-900">
+                            
+                              Edit </Link>   
                           </div>
-                          <div>
-                          <a
-                            href="#"
-                            className="text-indigo-600 hover:text-indigo-900"
-                          >
-                            Delete
-                          </a>
-                          </div>
+                            <div>
+                              <button className="text-indigo-600 hover:text-indigo-900" onClick={()=>{handleDelete(user)}}>                       
+                              Delete
+                                </button>
+                            </div>
                           </div>
                         </td>
                       
@@ -151,6 +174,7 @@ const User = (props) => {
           </div>
         </div>
       </div>
+  
       <>
       {totalPage > 0 &&
       <div className="pagination mt-3 flex justify-center">
@@ -178,7 +202,7 @@ const User = (props) => {
       </div>
       }
     </>
-
+      <ModelDelete show = {show}  handleClose={handleClose} ConfirmDeleteUser ={ConfirmDeleteUser}  dataModel ={dataModel}/>
   
     </>
   );
