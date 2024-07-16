@@ -12,6 +12,11 @@ const LoginUser = async(LoginValue,password)=>{
     )
 }
 
+const fetAllUser = async(page ,limit)=>{
+    return await axios.get(`http://localhost:8080/api/v1/user/read?page=${page}&&limit=${limit}`)
+}
 
 
-export {RegisterNewUser ,LoginUser}
+
+
+export {RegisterNewUser ,LoginUser ,fetAllUser }
