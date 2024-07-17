@@ -19,7 +19,15 @@ const deleteUser = async (userId)=>{
     return await axios.delete(`http://localhost:8080/api/v1/user/delete/${userId}`)
 }
 
+const FetGroup = async()=>{
+    return await axios.get(`http://localhost:8080/api/v1/group/read`)
+}
+const CreatUser=async(data)=>{
+    return await axios.post('http://localhost:8080/api/v1/user/create', data);
+
+}
 
 
 
-export {RegisterNewUser ,LoginUser ,fetAllUser,deleteUser }
+
+export {RegisterNewUser ,LoginUser ,fetAllUser,deleteUser,FetGroup,CreatUser }

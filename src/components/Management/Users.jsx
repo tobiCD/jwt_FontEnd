@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { fetAllUser, deleteUser } from "../../services/userService";
 import ReactPaginate from "https://cdn.skypack.dev/react-paginate@7.1.3";
-// import React, { useEffect,useState} from "https://cdn.skypack.dev/react@17.0.1";
 import ReactDOM from "https://cdn.skypack.dev/react-dom@17.0.1";
 import { Link } from "react-router-dom";
 import './Users.scss'
 import { toast } from "react-toastify";
 import ModelDelete from '../Management/Popup'
 import { data } from "autoprefixer";
+import CreateUserModal from "./CreateUserModal";
+import { Button } from "react-bootstrap";
 const User = (props) => {
   const [listUsers, setListUsers] = useState([]);
   const [currentPage , setCurrentPage] = useState(1);
@@ -16,7 +17,9 @@ const User = (props) => {
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
   const [dataModel , setDataModel] = useState(null)
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
 
+  
   useEffect(() => {
     fetchUser();
   }, [currentPage]);
@@ -24,7 +27,6 @@ const User = (props) => {
   const fetchUser = async () => {
     try {
       const response = await fetAllUser( currentPage,currentLimit);
-      console.log(response)
       if (response && response.data && response.data.EC === 0) {
         setListUsers(response.data.DT.users);
         setTotalPage(response.data.DT.totalPages)
@@ -35,10 +37,12 @@ const User = (props) => {
     }
   };
 
+
+
   const handlePageClick = async(event) => {
     setCurrentPage(+event.selected +1)
     // console.log(+event.selected +1)
-    await fetAllUser(+event.selected +1);
+    // await fetAllUser(+event.selected +1);
   };
   const handleClose = () => {
     setShow(false);
@@ -55,6 +59,7 @@ const User = (props) => {
         await deleteUser(dataModel.id);
         toast.success('User deleted successfully!');
         await fetAllUser();
+        window.location.reload()
       } catch (error) {
         toast.error('Failed to delete user. Please try again.');
       } finally {
@@ -62,13 +67,22 @@ const User = (props) => {
       }
     }
   };
+  const handleCreateUserClose = () => setShowCreateUserModal(false);
+  const handleCreateUserShow = () => setShowCreateUserModal(true);
+
   return (
     <>
       <div className="flex flex-col">
         <h1 className="mb-4 text-xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
           User Table
         </h1>
-        <div className="-my-1 overflow-x-auto sm:-mx-6 lg:-mx-1">
+        <div className="flex justify-items-start px-7 ">
+        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={handleCreateUserShow}>                       
+                              Create User
+           </button>
+        </div> 
+ <div className="-my-1 overflow-x-auto sm:-mx-6 lg:-mx-1">
+  
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
             <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
               <table className="min-w-full divide-y divide-gray-200">
@@ -203,7 +217,8 @@ const User = (props) => {
       }
     </>
       <ModelDelete show = {show}  handleClose={handleClose} ConfirmDeleteUser ={ConfirmDeleteUser}  dataModel ={dataModel}/>
-  
+      <CreateUserModal show={showCreateUserModal} handleClose={handleCreateUserClose} fetchUser={fetchUser} />
+
     </>
   );
 };
