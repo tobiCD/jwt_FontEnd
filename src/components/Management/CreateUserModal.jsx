@@ -7,15 +7,39 @@ import axios from 'axios';
 import './Users.scss';
 import { GrOptimize } from 'react-icons/gr';
 
-const CreateUserModal = ({ show, handleClose, fetchUser }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+const CreateUserModal = ({ show, handleClose, fetchUser,action,dataModalUser}) => {
+  const { register, handleSubmit, formState: { errors },setValue,reset } = useForm();
   const [userGroups, setUserGroups] = useState([]);
 
 
   useEffect(() => {
     getGroups();
+   
   }, []);
-  
+
+  //for edit
+  useEffect(()=>{
+    if (action === 'EDIT') {
+      reset({
+        username: dataModalUser.username,
+        email: dataModalUser.email,
+        password: dataModalUser.password,
+        phoneNumber: dataModalUser.phoneNumber,
+        gender: dataModalUser.gender,
+        role: dataModalUser.Group.id.toString()
+      });
+    } else {
+      reset({
+        username: '',
+        email: '',
+        password: '',
+        phoneNumber: '',
+        gender: '',
+        role: ''
+      });
+    }
+  },[action, dataModalUser, setValue,])
+
   const getGroups = async () => {
     try {
       let res = await FetGroup();
@@ -30,20 +54,6 @@ const CreateUserModal = ({ show, handleClose, fetchUser }) => {
     }
 
  
-
-  // const getGroups = async () => {
-  //   try {
-  //     let res = await FetGroup();
-  //     // console.log('Response:', res);
-
-  //     if (res && res.data && res.data.EC === 0) {
-  //       setUserGroups(res.data.DT);
-  //     }  
-  //  } catch (error) {
-  //     console.log(error)
-  //     }
-  //   }
-
 
 const onSubmit = async (data) => {
     try {
@@ -72,12 +82,14 @@ const onSubmit = async (data) => {
       }
     }
   }
-  
+  const handleCloseModalUser =()=>{
+    handleClose();
+  }
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={show} onHide={()=>{handleCloseModalUser()}}>
       <Modal.Header closeButton>
-        <Modal.Title>Create User</Modal.Title>
+        <Modal.Title>{action==='CREATE' ? 'Create new user' :'Edit user'}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -86,11 +98,12 @@ const onSubmit = async (data) => {
             <Form.Control
               type="email"
               placeholder="Enter email"
+              disabled ={ action === 'CREATE' ? false : true}
               {...register('email', { required: 'Email is required' })}
             />
             {errors.email && <span className='text-red-600'>{errors.email.message}</span>}
           </Form.Group>
-          <Form.Group controlId="formEmail">
+          <Form.Group controlId="formUsername">
             <Form.Label>Username</Form.Label>
             <Form.Control
               type="text"
@@ -105,20 +118,25 @@ const onSubmit = async (data) => {
             <Form.Control
               type="tel"
               placeholder="Enter phone number"
+              disabled ={ action === 'CREATE' ? false : true}
               {...register('phoneNumber', { required: 'Phone number is required' })}
             />
             {errors.phoneNumber && <span className='text-red-600'>{errors.phoneNumber.message}</span>}
           </Form.Group>
-
+     {
+      action ==='CREATE'&&
           <Form.Group controlId="formPassword">
             <Form.Label>Password</Form.Label>
             <Form.Control
               type="password"
               placeholder="Enter password"
+              autoComplete='current-passwor'
               {...register('password', { required: 'Password is required' })}
             />
             {errors.password && <span className='text-red-600' >{errors.password.message}</span>}
           </Form.Group>
+        }
+     
 
           <Form.Group controlId="formGender">
             <Form.Label>Gender</Form.Label>
@@ -147,7 +165,8 @@ const onSubmit = async (data) => {
           </Form.Group>
 
           <Button className='Submit' variant="primary" type="submit">
-            Create User
+          
+            {action === 'CREATE' ? 'Create User' : 'Update'}
           </Button>
         </Form>
       </Modal.Body>

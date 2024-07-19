@@ -17,8 +17,12 @@ const User = (props) => {
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
   const [dataModel , setDataModel] = useState(null)
-  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
 
+
+  //edit
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
+  const [actionModalUser , setActionModalUser] =useState('CREATE')
+  const [dataModalUser, setDataModalUser ] = useState({})
   
   useEffect(() => {
     fetchUser();
@@ -47,11 +51,19 @@ const User = (props) => {
   const handleClose = () => {
     setShow(false);
     setDataModel(null) 
+    // setDataModalUser({})
   }
+
   const handleDelete = async(user)=>{
     handleShow();
     console.log(user)
     setDataModel(user)
+  }
+  const handleEditUser = async(user)=>{
+    setDataModalUser(user); // Truyền dữ liệu người dùng vào modal sửa đổi
+    setActionModalUser('EDIT'); // Đặt action là EDIT để biết modal đang ở chế độ chỉnh sửa
+    setShowCreateUserModal(true);
+    // console.log(">>>check user:",user)
   }
   const ConfirmDeleteUser = async ()=>{
     if (dataModel) {
@@ -67,7 +79,12 @@ const User = (props) => {
       }
     }
   };
-  const handleCreateUserClose = () => setShowCreateUserModal(false);
+  const handleCreateUserClose = () => {
+    setShowCreateUserModal(false);
+    // setDataModalUser({});
+    // console.log(dataModalUser)
+  
+  };
   const handleCreateUserShow = () => setShowCreateUserModal(true);
 
   return (
@@ -77,9 +94,10 @@ const User = (props) => {
           User Table
         </h1>
         <div className="flex justify-items-start px-7 ">
-        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={handleCreateUserShow}>                       
-                              Create User
-           </button>
+        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={()=>{
+          setShowCreateUserModal(true)
+          setActionModalUser('CREATE')
+        }}>  Create User</button>
         </div> 
  <div className="-my-1 overflow-x-auto sm:-mx-6 lg:-mx-1">
   
@@ -157,10 +175,10 @@ const User = (props) => {
                           
                           <div className="inline-flex space-x-3 ">
                             <div>
-                              <Link  to={`users/edit/${user.id}`}
-                              className="text-indigo-600 hover:text-indigo-900">
-                            
-                              Edit </Link>   
+                            <button className="text-indigo-600 hover:text-indigo-900" onClick={()=>{handleEditUser(user)}}>                       
+                              Edit
+                                </button>
+                             
                           </div>
                             <div>
                               <button className="text-indigo-600 hover:text-indigo-900" onClick={()=>{handleDelete(user)}}>                       
@@ -217,7 +235,7 @@ const User = (props) => {
       }
     </>
       <ModelDelete show = {show}  handleClose={handleClose} ConfirmDeleteUser ={ConfirmDeleteUser}  dataModel ={dataModel}/>
-      <CreateUserModal show={showCreateUserModal} handleClose={handleCreateUserClose} fetchUser={fetchUser} />
+      <CreateUserModal show={showCreateUserModal} handleClose={handleCreateUserClose} fetchUser={fetchUser} action={actionModalUser} dataModalUser={dataModalUser} />
 
     </>
   );
