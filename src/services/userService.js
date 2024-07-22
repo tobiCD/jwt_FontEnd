@@ -25,9 +25,13 @@ const FetGroup = async()=>{
 const CreatUser=async(data)=>{
     return await axios.post('http://localhost:8080/api/v1/user/create', data);
 
+
+}
+const EditUser = async(data)=>{
+    return await axios.put('http://localhost:8080/api/v1/user/edit', data)
 }
 
 
 
 
-export {RegisterNewUser ,LoginUser ,fetAllUser,deleteUser,FetGroup,CreatUser }
+export {RegisterNewUser ,LoginUser ,fetAllUser,deleteUser,FetGroup,EditUser,CreatUser }

@@ -11,11 +11,16 @@ import CreateUserModal from "./CreateUserModal";
 import { Button } from "react-bootstrap";
 const User = (props) => {
   const [listUsers, setListUsers] = useState([]);
+  //xử lí phân trang
   const [currentPage , setCurrentPage] = useState(1);
   const [currentLimit , setCurrentLimit ]= useState(2);
   const [totalPage , setTotalPage ]= useState(0);
+
+  // xử lí bật mở 
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
+
+  //xử lí dữ liệu 
   const [dataModel , setDataModel] = useState(null)
 
 
@@ -48,12 +53,14 @@ const User = (props) => {
     // console.log(+event.selected +1)
     // await fetAllUser(+event.selected +1);
   };
+
+  //xử lí đóng thêm , đưa dữ liệu trở về null
   const handleClose = () => {
     setShow(false);
     setDataModel(null) 
     // setDataModalUser({})
   }
-
+  // xử lí xoá user
   const handleDelete = async(user)=>{
     handleShow();
     console.log(user)
@@ -63,8 +70,9 @@ const User = (props) => {
     setDataModalUser(user); // Truyền dữ liệu người dùng vào modal sửa đổi
     setActionModalUser('EDIT'); // Đặt action là EDIT để biết modal đang ở chế độ chỉnh sửa
     setShowCreateUserModal(true);
-    // console.log(">>>check user:",user)
+    console.log(">>>check user:",user)
   }
+  // fetch api và xử lí 
   const ConfirmDeleteUser = async ()=>{
     if (dataModel) {
       try {

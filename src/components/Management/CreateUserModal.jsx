@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { FetGroup ,CreatUser } from '../../services/userService';
+import { FetGroup ,CreatUser,EditUser } from '../../services/userService';
 import axios from 'axios';
 import './Users.scss';
 import { GrOptimize } from 'react-icons/gr';
+import { data } from 'autoprefixer';
 
 const CreateUserModal = ({ show, handleClose, fetchUser,action,dataModalUser}) => {
   const { register, handleSubmit, formState: { errors },setValue,reset } = useForm();
-  const [userGroups, setUserGroups] = useState([]);
+  const [userGroups, setUserGroups] = useState([]); // gọi data group 
 
 
   useEffect(() => {
@@ -18,18 +19,21 @@ const CreateUserModal = ({ show, handleClose, fetchUser,action,dataModalUser}) =
   }, []);
 
   //for edit
-  useEffect(()=>{
+  useEffect(()=>{ // form reset khi chuyển giữa edit và Creat
     if (action === 'EDIT') {
       reset({
+        id : dataModalUser.id,
         username: dataModalUser.username,
         email: dataModalUser.email,
         password: dataModalUser.password,
         phoneNumber: dataModalUser.phoneNumber,
         gender: dataModalUser.gender,
-        role: dataModalUser.Group.id.toString()
+
+        role: dataModalUser.Group.id ? dataModalUser.Group.id.toString() : ''
       });
     } else {
       reset({
+        id : '',
         username: '',
         email: '',
         password: '',
@@ -38,7 +42,7 @@ const CreateUserModal = ({ show, handleClose, fetchUser,action,dataModalUser}) =
         role: ''
       });
     }
-  },[action, dataModalUser, setValue,])
+  },[action, dataModalUser, setValue,])// 
 
   const getGroups = async () => {
     try {
@@ -55,10 +59,13 @@ const CreateUserModal = ({ show, handleClose, fetchUser,action,dataModalUser}) =
 
  
 
-const onSubmit = async (data) => {
+const onSubmit = async (data) => {/// 
     try {
       console.log(data)
-      const response = await CreatUser(data)
+   
+        const response = action ==='CREATE' ? 
+        await CreatUser(data):
+        await EditUser(data);
       if (response.data && response.data.EC === 0) {
         toast.success('User created successfully!');
         fetchUser();
@@ -66,6 +73,7 @@ const onSubmit = async (data) => {
       } else {
         toast.error(response.data.EM);
       }
+    
     } catch (error) {
       console.log(error)
       if(error.response){
@@ -93,6 +101,15 @@ const onSubmit = async (data) => {
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form.Group controlId="formId">
+            <Form.Control
+              hidden
+              type="id"
+              placeholder="id"
+              disabled ={ action === 'CREATE' ? false : true}
+              {...register('id',)}
+            />
+          </Form.Group>
           <Form.Group controlId="formEmail">
             <Form.Label>Email</Form.Label>
             <Form.Control
@@ -140,7 +157,7 @@ const onSubmit = async (data) => {
 
           <Form.Group controlId="formGender">
             <Form.Label>Gender</Form.Label>
-            <Form.Control as="select" {...register('gender', { required: 'Gender is required' })}>
+            <Form.Control as="select" {...register('gender', )}>
               <option value="">Select Gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
@@ -151,7 +168,7 @@ const onSubmit = async (data) => {
 
           <Form.Group controlId="formRole">
             <Form.Label>Role</Form.Label>
-            <Form.Control as="select" {...register('role', { required: 'Role is required' })}>
+            <Form.Control as="select" {...register('role', )}>
               <option value="">Select Role</option>
              { userGroups.length > 0 && userGroups.map((item,index)=>{
               return (
