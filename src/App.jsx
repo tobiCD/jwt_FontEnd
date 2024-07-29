@@ -27,7 +27,7 @@ const App = ()=>{
               </div>
              : 
               <>
-                <div>
+                <div className='nav-bar'>
                   <Navbar />
                 </div>
                 <div className='app'>

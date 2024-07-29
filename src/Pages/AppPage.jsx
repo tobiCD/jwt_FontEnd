@@ -17,7 +17,10 @@ const AppPages =(props)=>{
         {/* Private route example */}
         <Route path="*" element={<NotFoundPage />} /> {/* Catch-all route */}
         <Route path="/" element={<HomePage />} />
-        <Route path="/users" element={<PrivatePages Component ={User}/>} />
+        
+        <Route path="/users" element={<PrivatePages Component ={User}/>}
+       
+         />
     </Routes>
         </>
     )

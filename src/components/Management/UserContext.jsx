@@ -19,13 +19,10 @@ const UserProvider = ({ children }) => {
       setUser({...account,
         isLoading:false}) 
     };
-  
     // Logout updates the user data to default
-    const logout = () => {
-      setUser((user) => ({
-        name: '',
-        auth: false,
-      }));
+    const LogoutContext = () => {
+      setUser({...userDefaut,
+        isLoading:false, }) 
     };
 
     /// xử lí dữ kiện thêm dữ liệu account vào cookies để không phải reload 
@@ -65,15 +62,19 @@ const UserProvider = ({ children }) => {
       
     
     
-  
+   
     useEffect(()=>{
-      if(window.location.pathname !== '/' || window.location.pathname !== '/login' ){
+      if(window.location.pathname !== '/' && window.location.pathname !== '/login' ){
         fetUserAccount();
+      }
+      else{  // handle lại login mà không call api 
+
+        setUser({...user,isLoading : false})
       }
     },[])
   
     return (
-      <UserContext.Provider value={{ user, loginContext, logout }}>
+      <UserContext.Provider value={{ user, loginContext ,LogoutContext}}>
         {children}
       </UserContext.Provider>
     );

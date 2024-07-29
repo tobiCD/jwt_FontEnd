@@ -4,6 +4,7 @@ const RegisterNewUser = async(data)=>{
     return await axios.post('/api/v1/register',data )
 }
 
+
 const LoginUser = async(LoginValue,password)=>{
     return await axios.post('/api/v1/login',
     {
@@ -37,7 +38,11 @@ const getUserAccount = async()=>{
     return await axios.get('/api/v1/account')
 }
 
+const LogoutUser = async()=>{
+    return await axios.post('/api/v1/logout')
+}
 
 
 
-export {RegisterNewUser ,LoginUser ,fetAllUser,deleteUser,FetGroup,EditUser,CreatUser,allUser,getUserAccount }
+export {RegisterNewUser ,LoginUser ,fetAllUser,deleteUser,
+    FetGroup,EditUser,CreatUser,allUser,getUserAccount,LogoutUser }

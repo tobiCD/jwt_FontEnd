@@ -6,7 +6,7 @@ import { UserContext } from "../components/Management/UserContext";
 // import User from "../components/Management/Users";
 const PrivatePages = ({Component}) => {
   const {user} = useContext(UserContext)
-  console.log('>>check user' , user)
+  // console.log('>>check user' , user)
 
     if (user.isAuthenticated === false ) {
       // Nếu không có phiên đăng nhập, điều hướng đến trang login

@@ -13,7 +13,7 @@ const User = () => {
   const [listUsers, setListUsers] = useState([]);
   //xử lí phân trang
   const [currentPage , setCurrentPage] = useState(1);
-  const [currentLimit , setCurrentLimit ]= useState(2);
+  const [currentLimit , setCurrentLimit ]= useState(5);
   const [totalPage , setTotalPage ]= useState(0);
 
   // xử lí bật mở 
@@ -99,7 +99,7 @@ const User = () => {
   return (
     <>
       <div className="flex flex-col">
-        <h1 className="mb-4 text-xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+        <h1 className=" flex justify-center mb-4 text-xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
           User Table
         </h1>
         <div className="flex justify-items-start px-7 ">

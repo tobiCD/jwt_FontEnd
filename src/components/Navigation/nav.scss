@@ -1,0 +1,11 @@
+.dropdown-toggle {
+    background-color: transparent !important; // Bỏ màu nền
+    border: none !important; // Bỏ viền
+    color: white; // Giữ màu chữ nếu cần
+  
+    // Thêm hiệu ứng hover nếu cần
+    &:hover {
+      background-color: transparent !important; // Bỏ màu nền khi hover
+      color: white; // Giữ màu chữ khi hover
+    }
+  }
