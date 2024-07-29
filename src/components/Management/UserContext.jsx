@@ -1,19 +1,22 @@
 import React,{ useEffect, useState } from "react";
 import { getUserAccount } from "../../services/userService";
-import { data } from "autoprefixer";
+
 const UserContext = React.createContext(null)
 // tạo dữ liệu đưa vào login check 
 const UserProvider = ({ children }) => {
     // User is the name of the "data" that gets stored in context
-    const [user, setUser] = useState(
-        {isLoading : true,
+    const userDefaut = {
+          isLoading : true,
           isAuthenticated: false,
-        token: "",
-        account : {}});
+          token: "",
+          account : {}
+        };
+    
+    const [user, setUser] = useState(userDefaut);
   
     // Login updates the user data with a name parameter
     const loginContext = (account) => {
-      setUser({account,
+      setUser({...account,
         isLoading:false}) 
     };
   
@@ -43,26 +46,29 @@ const UserProvider = ({ children }) => {
               account : {roles , email ,username},
               isLoading : false
             } 
-            setTimeout(() => {
               setUser(data)
-
-            }, 1*1000);
+          }
+          else{
+            setUser({...userDefaut , isLoading: false})
           }
           
         } catch (error) {
           console.log(error)
-          const data = {
-            // xử lí đưa dữ liệu response vào context
-            isAuthenticated : false,
-          } 
-            setUser(data)
-          }
+          // const data = {
+          //   // xử lí đưa dữ liệu response vào context
+          //   isAuthenticated : false,
+          // } 
+          //   setUser(data)
+          // }
         }
+      }
+      
+    
     
   
     useEffect(()=>{
       if(window.location.pathname !== '/' || window.location.pathname !== '/login' ){
-      fetUserAccount();
+        fetUserAccount();
       }
     },[])
   
@@ -71,6 +77,6 @@ const UserProvider = ({ children }) => {
         {children}
       </UserContext.Provider>
     );
-  }
+}
 
 export  {UserProvider,UserContext};
