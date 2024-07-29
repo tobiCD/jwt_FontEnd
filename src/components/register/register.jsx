@@ -75,8 +75,9 @@ const fields = [
    try {
     
     const response = await RegisterNewUser(Userdata)
-    const serverData =response.data// call Server để nhận respone code and validform register
-    if (response.status >=200 && response.status <300){
+    console.log(response)
+    const serverData = response.data// call Server để nhận respone code and validform register
+    if (response.EC >=200 && response.EC <300){
       toast.success('Registration successfully!')
       navigate("/login")
       
@@ -84,9 +85,10 @@ const fields = [
   
    }
     catch (error) {
+      console.log(error)
      if ( error.response){
-      console.error('error' , error.response.data)
-      switch (error.response.status) {
+      console.error('error' , error.response.data.EM)
+      switch (error.response.data.EC) {
         case 400:
           toast.error(error.response.data.EM)
           break;

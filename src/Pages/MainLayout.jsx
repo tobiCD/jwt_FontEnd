@@ -5,9 +5,9 @@ import 'react-toastify/dist/ReactToastify.css';
 const MainLayout = () =>{
     return (
         <>
-            <Navbar/>
+            {/* <Navbar/>
             <Outlet/>
-            <ToastContainer/>
+            <ToastContainer/> */}
         </>
     )
 }

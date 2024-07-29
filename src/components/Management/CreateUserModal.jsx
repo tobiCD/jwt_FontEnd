@@ -49,8 +49,8 @@ const CreateUserModal = ({ show, handleClose, fetchUser,action,dataModalUser}) =
       let res = await FetGroup();
       // console.log('Response:', res);
 
-      if (res && res.data && res.data.EC === 0) {
-        setUserGroups(res.data.DT);
+      if (res && res.EC === 0) {
+        setUserGroups(res.DT);
       }  
    } catch (error) {
       console.log(error)
@@ -66,12 +66,12 @@ const onSubmit = async (data) => {///
         const response = action ==='CREATE' ? 
         await CreatUser(data):
         await EditUser(data);
-      if (response.data && response.data.EC === 0) {
+      if (response && response.EC === 0) {
         toast.success('User created successfully!');
         fetchUser();
         handleClose();
       } else {
-        toast.error(response.data.EM);
+        toast.error(response.EM);
       }
     
     } catch (error) {
@@ -79,10 +79,10 @@ const onSubmit = async (data) => {///
       if(error.response){
         switch(error.response.status){
           case 400 : 
-          toast.error(error.response.data.EM)
+          toast.error(error.response.EM)
           break;
           case 500 : 
-          toast.error(error.response.data.EM)
+          toast.error(error.response.EM)
           break;
           default:
           break;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetAllUser, deleteUser } from "../../services/userService";
+import { fetAllUser, deleteUser,allUser } from "../../services/userService";
 import ReactPaginate from "https://cdn.skypack.dev/react-paginate@7.1.3";
 import ReactDOM from "https://cdn.skypack.dev/react-dom@17.0.1";
 import { Link } from "react-router-dom";
@@ -9,7 +9,7 @@ import ModelDelete from '../Management/Popup'
 import { data } from "autoprefixer";
 import CreateUserModal from "./CreateUserModal";
 import { Button } from "react-bootstrap";
-const User = (props) => {
+const User = () => {
   const [listUsers, setListUsers] = useState([]);
   //xử lí phân trang
   const [currentPage , setCurrentPage] = useState(1);
@@ -36,9 +36,10 @@ const User = (props) => {
   const fetchUser = async () => {
     try {
       const response = await fetAllUser( currentPage,currentLimit);
-      if (response && response.data && response.data.EC === 0) {
-        setListUsers(response.data.DT.users);
-        setTotalPage(response.data.DT.totalPages)
+      console.log(response)
+      if (response && response && response.EC === 0) {
+        setListUsers(response.DT.users);
+        setTotalPage(response.DT.totalPages)
         
       }
     } catch (error) {

@@ -1,25 +1,44 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.scss'
-import MainLayout from './Pages/MainLayout'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useContext, useEffect } from "react";
+
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { NavLink } from 'react-router-dom'
+import Navbar from './components/Navigation/Nav'
+import { Circles } from 'react-loader-spinner'
+
 import AppPages from './Pages/AppPage'
-
+import { UserContext } from './components/Management/UserContext' 
 const App = ()=>{
-  return(
-    <Router>
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-        <Route path="/*" element={<AppPages />} />
-        </Route>
-      </Routes>
-    </Router>
-  )
- 
-}
-
+  const {user} = useContext(UserContext)
+    return (
+        <Router>  
+            {user && user.isLoading ? 
+              <div className="spinner-container">
+               <Circles
+                    height="80"
+                    width="80"
+                    color="#4fa94d"
+                    ariaLabel="circles-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                    visible={true}
+                    />
+              </div>
+             : 
+              <>
+                <div>
+                  <Navbar />
+                </div>
+                <div className='app'>
+                  <AppPages />
+                  <ToastContainer />
+                </div>
+              </>
+            }
+        </Router>
+      )
+    
+  }
 
 export default App

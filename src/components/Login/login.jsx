@@ -5,8 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import {LoginUser} from '../../services/userService'
+import { UserContext } from "../Management/UserContext";
 
 const Login = ()=>{
+
+const {loginContext} = React.useContext(UserContext)
 let navigate = useNavigate();
 const [isLogin , setIsLogin ]= useState("")
 const [password , setPassword] = useState("")
@@ -20,22 +23,29 @@ const submitForm = async(e) =>{
  try {
   const response = await LoginUser(isLogin,password)
   console.log(response)
-  if(response.status >=200 && response.status <=300)
+  if(response.EC === 200 )
   {
-    toast.success(response.data.EM)
+    toast.success(response.EM)
+    const email =response.DT.email
+    const  username = response.DT.username
+    const roles  = response.DT.roles
+    const access_token = response.DT.access_token
     const data = {
+      // xử lí đưa dữ liệu response vào context
       isAuthenticated : true,
-      token : 'fake token'
+      token : access_token,
+      account : {roles , email ,username}
     }
-    sessionStorage.setItem('account',JSON.stringify(data))
-    navigate("/users")
+    // sessionStorage.setItem('account',JSON.stringify(data));
+    loginContext(data);
+    navigate("/users");
   }
   
 } catch (error) {
   console.log(error)
   if ( error.response){
-    console.error('error' , error.response.data)
-    switch (error.response.status) {
+    console.error('error' , error.response.data.EC)
+    switch (error.response.data.EC) {
       case 400:
         toast.error(error.response.data.EM)
         break;

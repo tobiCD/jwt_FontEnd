@@ -1,37 +1,43 @@
-import axios from "axios"
+import axios from "../setup/axios"
 
 const RegisterNewUser = async(data)=>{
-    return await axios.post('http://localhost:8080/api/v1/register',data )
+    return await axios.post('/api/v1/register',data )
 }
 
 const LoginUser = async(LoginValue,password)=>{
-    return await axios.post('http://localhost:8080/api/v1/login',
+    return await axios.post('/api/v1/login',
     {
         LoginValue , password
     }
     )
 }
 
+const allUser = async(page,limit )=>{
+    return await axios.get(`/api/v1/user/read`,page,limit)
+}
 const fetAllUser = async(page ,limit)=>{
-    return await axios.get(`http://localhost:8080/api/v1/user/read?page=${page}&&limit=${limit}`)
+    return await axios.get(`/api/v1/user/read?page=${page}&&limit=${limit}`)
 }
 const deleteUser = async (userId)=>{
-    return await axios.delete(`http://localhost:8080/api/v1/user/delete/${userId}`)
+    return await axios.delete(`/api/v1/user/delete/${userId}`)
 }
 
 const FetGroup = async()=>{
-    return await axios.get(`http://localhost:8080/api/v1/group/read`)
+    return await axios.get(`/api/v1/group/read`)
 }
 const CreatUser=async(data)=>{
-    return await axios.post('http://localhost:8080/api/v1/user/create', data);
+    return await axios.post('/api/v1/user/create', data);
 
 
 }
 const EditUser = async(data)=>{
-    return await axios.put('http://localhost:8080/api/v1/user/edit', data)
+    return await axios.put('/api/v1/user/edit', data)
+}
+const getUserAccount = async()=>{
+    return await axios.get('/api/v1/account')
 }
 
 
 
 
-export {RegisterNewUser ,LoginUser ,fetAllUser,deleteUser,FetGroup,EditUser,CreatUser }
+export {RegisterNewUser ,LoginUser ,fetAllUser,deleteUser,FetGroup,EditUser,CreatUser,allUser,getUserAccount }
