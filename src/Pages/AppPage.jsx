@@ -8,6 +8,7 @@ import { useRef } from 'react';
 import Navbar from '../components/Navigation/Nav';
 import NotFoundPage from './NotFoundPage';
 import HomePage from './HomePage';
+import Roles from '../components/Roles/Roles';
 const AppPages =(props)=>{
     return (
         <>
@@ -21,6 +22,9 @@ const AppPages =(props)=>{
         <Route path="/users" element={<PrivatePages Component ={User}/>}
        
          />
+          <Route path="/roles" element={<PrivatePages Component ={Roles}/>}
+       
+       />
     </Routes>
         </>
     )

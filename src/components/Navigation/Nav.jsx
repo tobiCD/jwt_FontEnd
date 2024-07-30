@@ -47,14 +47,17 @@ const Navbar = () => {
             </div>
 
             {/* Menu Section */}
-            <div className="flex items-center space-x-4">
-              {user.isAuthenticated ? (
+            <div className="flex items-center space-x-4 font-bold">
+              {user.isAuthenticated || user.account.token === ''?  (
                 <>
                   <NavLink to='/' className={linkClassName}>
                     Home
                   </NavLink>
                   <NavLink to='/users' className={linkClassName}>
                     DashBoard
+                  </NavLink>
+                  <NavLink to='/roles' className={linkClassName}>
+                    Roles
                   </NavLink>
                   <Dropdown>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
